@@ -39,7 +39,19 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;margin:0;letter-spacing:-.
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
 .badge{font-size:.75rem;font-weight:700;border-radius:6px;padding:1px 7px;background:#FDE68A;color:#78350F}
 .badge.bag{background:#B91C1C;color:#fff}
-.sel{border:1px solid var(--line);background:var(--chip);border-radius:10px;padding:8px 12px;font-size:1rem;min-width:220px;max-width:100%;cursor:pointer}
+.multi{position:relative;min-width:260px;max-width:100%}
+.multi>summary{list-style:none;border:1px solid var(--line);background:var(--chip);border-radius:10px;padding:8px 12px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.multi>summary::-webkit-details-marker{display:none}
+.multi>summary::after{content:"⌄";font-size:1.1rem;color:var(--muted)}
+.multi[open]>summary{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 18%,transparent)}
+.multi-menu{position:absolute;z-index:30;top:calc(100% + 6px);right:0;width:min(420px,calc(100vw - 48px));max-height:360px;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 28px rgba(0,0,0,.18);padding:10px}
+.multi-tools{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:2px 2px 8px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.multi-title{font-size:.8rem;font-weight:700;color:var(--muted);margin:8px 2px 4px}
+.checkgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.check{display:flex;align-items:center;gap:7px;padding:7px 8px;border-radius:8px;cursor:pointer;border:1px solid transparent}
+.check:hover{background:var(--chip)}
+.check input{accent-color:var(--accent)}
+.check.grade{font-weight:700}
 .src{font-size:.8rem;color:var(--muted);margin-top:30px;text-align:center}
 .chip .dot{width:10px;height:10px;border-radius:50%;background:var(--c)}
 .chip.subj[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
@@ -73,7 +85,18 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;margin:0;letter-spacing:-.
 .ex .p{font-size:.88rem;color:var(--muted)}
 .ex .cls{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .ex .cls i{font-style:normal;font-size:.8rem;background:var(--chip);border:1px solid var(--line);border-radius:6px;padding:0 6px}
-.ex .cls i.me{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ex .cls i.me{box-shadow:0 0 0 2px var(--ink)}
+.ex .cls i.grade-t,.legend-dot.grade-t{background:#DBEAFE;color:#1E3A8A;border-color:#93C5FD}
+.ex .cls i.grade-y,.legend-dot.grade-y{background:#DCFCE7;color:#14532D;border-color:#86EFAC}
+.ex .cls i.grade-ya,.legend-dot.grade-ya{background:#FEF3C7;color:#78350F;border-color:#FCD34D}
+.ex .cls i.grade-yb,.legend-dot.grade-yb{background:#FCE7F3;color:#831843;border-color:#F9A8D4}
+:root[data-theme="dark"] .ex .cls i.grade-t,:root[data-theme="dark"] .legend-dot.grade-t{background:#1E3A5F;color:#DBEAFE;border-color:#3B82F6}
+:root[data-theme="dark"] .ex .cls i.grade-y,:root[data-theme="dark"] .legend-dot.grade-y{background:#173B2A;color:#DCFCE7;border-color:#22C55E}
+:root[data-theme="dark"] .ex .cls i.grade-ya,:root[data-theme="dark"] .legend-dot.grade-ya{background:#4A3512;color:#FEF3C7;border-color:#D97706}
+:root[data-theme="dark"] .ex .cls i.grade-yb,:root[data-theme="dark"] .legend-dot.grade-yb{background:#4A1D35;color:#FCE7F3;border-color:#EC4899}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;font-size:.8rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend-dot{width:12px;height:12px;border-radius:4px;border:1px solid currentColor}
 .ex .more{display:none;margin-top:6px;font-size:.88rem;color:var(--muted)}
 .ex[aria-expanded="true"] .more{display:block}
 .more ul{margin:4px 0 0;padding-inline-start:18px}
@@ -85,7 +108,7 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;margin:0;letter-spacing:-.
 .cell{min-height:92px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:4px;cursor:pointer;text-align:start;display:flex;flex-direction:column;gap:3px;overflow:hidden}
 .cell.out{opacity:.35}
 .cell.today{box-shadow:inset 0 0 0 2px #E0A800;background:var(--today)}
-.cell.sel{outline:3px solid var(--accent)}
+.cell.chosen{outline:3px solid var(--accent);outline-offset:-1px}
 .cell .n{font-weight:700;font-size:.9rem}
 .pill{background:var(--c);color:#fff;border-radius:6px;font-size:.74rem;padding:1px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pmore{font-size:.72rem;color:var(--muted)}
@@ -100,6 +123,8 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;margin:0;letter-spacing:-.
   .dots{flex-direction:row;flex-wrap:wrap}
   .pmore{display:none}
   .next{width:100%}
+  .multi{width:100%;min-width:0}
+  .multi-menu{width:min(420px,calc(100vw - 32px))}
   #subjChips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;flex:1;min-width:0}
   .chip{white-space:nowrap;flex:none}
 }
@@ -118,10 +143,21 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;margin:0;letter-spacing:-.
   </header>
 
   <section class="panel" aria-label="סינון">
-    <div class="row"><label class="rowlbl" for="clsSel">כיתה</label>
-      <select id="clsSel" class="sel"></select></div>
-    <div class="row"><label class="rowlbl" for="subjSel">מקצוע</label>
-      <select id="subjSel" class="sel"></select></div>
+    <div class="row"><span class="rowlbl">כיתה</span>
+      <details class="multi" id="classMulti">
+        <summary id="classSummary">כל השכבות והכיתות</summary>
+        <div class="multi-menu" id="classMenu"></div>
+      </details>
+    </div>
+    <div class="row"><span class="rowlbl">מקצוע</span>
+      <details class="multi" id="subjMulti">
+        <summary id="subjSummary">כל המקצועות</summary>
+        <div class="multi-menu" id="subjMenu"></div>
+      </details>
+    </div>
+    <div class="legend" aria-label="צבעי שכבות">
+      <span><i class="legend-dot grade-t"></i>ט׳</span><span><i class="legend-dot grade-y"></i>י׳</span><span><i class="legend-dot grade-ya"></i>י״א</span><span><i class="legend-dot grade-yb"></i>י״ב</span>
+    </div>
     <div class="row">
       <span class="rowlbl">חיפוש</span>
       <input class="search" id="q" type="search" placeholder="שם מבחן, למשל מתכונת או בגרות…">
@@ -256,37 +292,42 @@ function build(raw){
 }
 
 /* ---------- מצב ---------- */
-const st={grade:null,cls:null,subj:new Set(),q:'',future:true,view:'list',month:null,sel:null};
+const st={grades:new Set(),classes:new Set(),subj:new Set(),q:'',future:true,view:'list',month:null,sel:null};
 
 function filtered(ignoreFuture){
   const q=st.q.trim();
   return EXAMS.filter(e=>
-    (!st.cls||e.classes.includes(st.cls)) &&
-    (st.cls||!st.grade||e.classes.some(c=>gradeOf(c)===st.grade)) &&
+    ((!st.classes.size&&!st.grades.size)||e.classes.some(c=>st.classes.has(c)||st.grades.has(gradeOf(c)))) &&
     (!st.subj.size||st.subj.has(e.s)) &&
     (ignoreFuture||!st.future||e.d>=TODAY) &&
     (!q||e.title.includes(q)||e.t.some(t=>t[0].includes(q)||t[1].includes(q))));
 }
 
+function gradeClass(g){return g==='ט'?'grade-t':g==='י'?'grade-y':g==='יא'?'grade-ya':'grade-yb'}
+function selectionSummary(set, allLabel, noun){
+  if(!set.size) return allLabel;
+  const a=[...set]; return a.length<=3?a.join(', '):`${a.slice(0,2).join(', ')} ועוד ${a.length-2} ${noun}`;
+}
 function chips(){
-  const sel=document.getElementById('clsSel');
   const grades=GRADES.filter(g=>ALLCLS.some(c=>gradeOf(c)===g));
-  sel.innerHTML=`<option value="">כל השכבות</option>`+grades.map(g=>`<optgroup label="שכבה ${g}׳"><option value="g:${g}">כל שכבה ${g}׳</option>`+
-    ALLCLS.filter(c=>gradeOf(c)===g).map(c=>`<option value="c:${esc(c)}">${esc(c)}</option>`).join('')+`</optgroup>`).join('');
-  sel.value=st.cls?'c:'+st.cls:st.grade?'g:'+st.grade:'';
-  const ss=document.getElementById('subjSel');
-  ss.innerHTML=`<option value="">כל המקצועות</option>`+[...ALLSUBJ].sort((a,b)=>a.localeCompare(b,'he')).map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('');
-  ss.value=st.subj.size?[...st.subj][0]:'';
+  document.getElementById('classSummary').textContent = st.classes.size
+    ? selectionSummary(st.classes,'כל השכבות והכיתות','כיתות')
+    : st.grades.size ? 'שכבות '+selectionSummary(st.grades,'','נוספות') : 'כל השכבות והכיתות';
+  document.getElementById('classMenu').innerHTML=`<div class="multi-tools"><b>בחירה מרובה</b><button class="btn" type="button" data-clear="classes">ניקוי</button></div>
+    <div class="multi-title">שכבות</div><div class="checkgrid">${grades.map(g=>`<label class="check grade"><input type="checkbox" data-grade="${g}" ${st.grades.has(g)?'checked':''}> שכבה ${g}׳</label>`).join('')}</div>
+    <div class="multi-title">כיתות</div><div class="checkgrid">${ALLCLS.map(c=>`<label class="check"><input type="checkbox" data-class="${esc(c)}" ${st.classes.has(c)?'checked':''}> ${esc(c)}</label>`).join('')}</div>`;
+  document.getElementById('subjSummary').textContent=selectionSummary(st.subj,'כל המקצועות','מקצועות');
+  document.getElementById('subjMenu').innerHTML=`<div class="multi-tools"><b>בחירה מרובה</b><button class="btn" type="button" data-clear="subjects">ניקוי</button></div><div class="checkgrid">${[...ALLSUBJ].sort((a,b)=>a.localeCompare(b,'he')).map(x=>`<label class="check"><input type="checkbox" data-subject="${esc(x)}" ${st.subj.has(x)?'checked':''}> ${esc(x)}</label>`).join('')}</div>`;
 }
 
 function examCard(e){
   let cls=e.classes;
-  if(st.grade&&!st.cls) cls=cls.filter(c=>gradeOf(c)===st.grade);
+  if(st.classes.size||st.grades.size) cls=cls.filter(c=>st.classes.has(c)||st.grades.has(gradeOf(c)));
   const t=e.t.map(([n,c])=>`<li>${esc(n)}${c&&!e.title.includes(c)?` · ${esc(c)}`:''}</li>`).join('');
   const badge=e.type==='בגרות'?'<span class="badge bag">בגרות</span>':e.type?`<span class="badge">${esc(e.type)}</span>`:'';
   return `<button class="ex" style="--c:${col(e.s)}" aria-expanded="false">
     <div class="t"><span class="s">${esc(e.title)}</span>${badge}${e.h?`<span class="p">${period(e.h)}</span>`:''}${e.n?`<span class="p">${esc(e.n)}</span>`:''}</div>
-    <div class="cls">${cls.map(c=>`<i class="${c===st.cls?'me':''}">${esc(c)}</i>`).join('')}</div>
+    <div class="cls">${cls.map(c=>`<i class="${gradeClass(gradeOf(c))} ${st.classes.has(c)?'me':''}">${esc(c)}</i>`).join('')}</div>
     ${e.t.length?`<div class="more">מורים (${e.t.length}):<ul>${t}</ul></div>`:''}
   </button>`;
 }
@@ -300,7 +341,7 @@ function renderList(list){
   for(const [ws,arr] of weeks){
     const s=parseD(ws),en=new Date(s);en.setDate(s.getDate()+5);
     const title=s.getMonth()===en.getMonth()?`${s.getDate()}-${en.getDate()} ב${MONTHS[s.getMonth()]}`:`${s.getDate()} ב${MONTHS[s.getMonth()]} – ${en.getDate()} ב${MONTHS[en.getMonth()]}`;
-    const busy=st.cls&&arr.length>=3;
+    const busy=(st.classes.size===1)&&arr.length>=3;
     html+=`<section class="week"><div class="weekhead"><h2>שבוע ${title}</h2><span class="n ${busy?'busy':''}">${arr.length} מבחנים${busy?' · שבוע עמוס':''}</span></div>`;
     const days=new Map();arr.forEach(e=>{if(!days.has(e.d))days.set(e.d,[]);days.get(e.d).push(e)});
     for(const [d,ex] of days){const dd=parseD(d);
@@ -319,7 +360,7 @@ function renderCal(list){
   for(let i=0;i<42;i++){const d=new Date(start);d.setDate(start.getDate()+i);const k=fmtD(d);
     if(i===35&&d.getMonth()!==m-1)break;
     const ex=byDay.get(k)||[];
-    cells+=`<button class="cell ${d.getMonth()!==m-1?'out':''} ${k===TODAY?'today':''} ${k===st.sel?'sel':''} ${d.getDay()===6?'sat':''}" data-d="${k}" aria-label="${d.getDate()} ${MONTHS[d.getMonth()]}, ${ex.length} מבחנים">
+    cells+=`<button class="cell ${d.getMonth()!==m-1?'out':''} ${k===TODAY?'today':''} ${k===st.sel?'chosen':''} ${d.getDay()===6?'sat':''}" data-d="${k}" aria-label="${d.getDate()} ${MONTHS[d.getMonth()]}, ${ex.length} מבחנים">
       <span class="n">${d.getDate()}</span><span class="dots">${ex.slice(0,3).map(e=>`<span class="pill" style="--c:${col(e.s)}">${esc(e.title)}</span>`).join('')}</span>${ex.length>3?`<span class="pmore">+${ex.length-3}</span>`:''}</button>`;}
   const selEx=st.sel?byDay.get(st.sel)||[]:[];
   const sd=st.sel?parseD(st.sel):null;
@@ -328,7 +369,7 @@ function renderCal(list){
    <div class="detail">${st.sel?`<h3>יום ${DAYS[sd.getDay()]}, ${sd.getDate()} ב${MONTHS[sd.getMonth()]}</h3>${selEx.length?`<div class="exams">${selEx.map(examCard).join('')}</div>`:'<p class="count">אין מבחנים ביום הזה.</p>'}`:'<p class="count">לחיצה על יום מציגה את פרטי המבחנים.</p>'}</div>`;
 }
 
-function scopeName(){return st.cls?'לכיתה '+st.cls:st.grade?'לשכבה '+st.grade+'׳':''}
+function scopeName(){if(st.classes.size)return st.classes.size===1?'לכיתה '+[...st.classes][0]:`ל־${st.classes.size} כיתות`;if(st.grades.size)return st.grades.size===1?'לשכבה '+[...st.grades][0]+'׳':`ל־${st.grades.size} שכבות`;return ''}
 function renderNext(){
   const up=filtered(true).filter(e=>e.d>=TODAY);
   const el=document.getElementById('next');
@@ -346,14 +387,16 @@ function render(){
   document.getElementById('tabList').setAttribute('aria-selected',st.view==='list');
   document.getElementById('tabCal').setAttribute('aria-selected',st.view==='cal');
   document.getElementById('future').closest('label').style.display=st.view==='cal'?'none':'';
-  const h=new URLSearchParams();if(st.grade)h.set('g',st.grade);if(st.cls)h.set('c',st.cls);if(st.subj.size)h.set('s',[...st.subj].join(','));if(st.view==='cal')h.set('v','cal');
+  const h=new URLSearchParams();if(st.grades.size)h.set('g',[...st.grades].join(','));if(st.classes.size)h.set('c',[...st.classes].join(','));if(st.subj.size)h.set('s',[...st.subj].join(','));if(st.view==='cal')h.set('v','cal');
   try{history.replaceState(null,'',h.toString()?'#'+h.toString():location.pathname+location.search)}catch(e){}
-  try{localStorage.setItem('exam-filter',JSON.stringify({g:st.grade,c:st.cls}))}catch(e){}
+  try{localStorage.setItem('exam-filter',JSON.stringify({g:[...st.grades],c:[...st.classes],s:[...st.subj]}))}catch(e){}
 }
 
 document.addEventListener('click',ev=>{
   const b=ev.target.closest('button');if(!b)return;
-  if(b.dataset.s!==undefined){const s=b.dataset.s;if(!s)st.subj.clear();else st.subj.has(s)?st.subj.delete(s):st.subj.add(s);render();}
+  if(b.dataset.clear==='classes'){st.grades.clear();st.classes.clear();st.sel=null;render();}
+  else if(b.dataset.clear==='subjects'){st.subj.clear();st.sel=null;render();}
+  else if(b.dataset.s!==undefined){const s=b.dataset.s;if(!s)st.subj.clear();else st.subj.has(s)?st.subj.delete(s):st.subj.add(s);render();}
   else if(b.classList.contains('ex')&&b.querySelector('.more')){b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')!=='true');}
   else if(b.dataset.mv){const [y,m]=st.month.split('-').map(Number);const d=new Date(y,m-1+Number(b.dataset.mv),1);st.month=fmtD(d).slice(0,7);st.sel=null;render();}
   else if(b.dataset.d){st.sel=b.dataset.d;render();document.querySelector('.detail').scrollIntoView({behavior:'smooth',block:'nearest'});}
@@ -363,9 +406,12 @@ document.addEventListener('click',ev=>{
     const done=()=>{b.textContent='הקישור הועתק';setTimeout(()=>b.textContent='העתקת קישור לסינון',1800)};
     try{navigator.clipboard.writeText(u).then(done,()=>prompt('העתיקו את הקישור:',u))}catch(e){prompt('העתיקו את הקישור:',u)}}
 });
-document.getElementById('clsSel').addEventListener('change',e=>{const v=e.target.value;
-  st.cls=v.startsWith('c:')?v.slice(2):null; st.grade=v.startsWith('g:')?v.slice(2):st.cls?gradeOf(st.cls):null; st.sel=null; render();});
-document.getElementById('subjSel').addEventListener('change',e=>{st.subj.clear();if(e.target.value)st.subj.add(e.target.value);st.sel=null;render();});
+document.addEventListener('change',e=>{
+  const x=e.target;
+  if(x.matches('[data-grade]')){x.checked?st.grades.add(x.dataset.grade):st.grades.delete(x.dataset.grade);st.sel=null;render();}
+  else if(x.matches('[data-class]')){x.checked?st.classes.add(x.dataset.class):st.classes.delete(x.dataset.class);st.sel=null;render();}
+  else if(x.matches('[data-subject]')){x.checked?st.subj.add(x.dataset.subject):st.subj.delete(x.dataset.subject);st.sel=null;render();}
+});
 document.getElementById('q').addEventListener('input',e=>{st.q=e.target.value;render()});
 document.getElementById('future').addEventListener('change',e=>{st.future=e.target.checked;render()});
 
@@ -383,10 +429,11 @@ async function start(){
   if(rows===EMBEDDED) source='לא ניתן היה לטעון את הגיליון. מוצגים הנתונים השמורים';
   build(parseRows(rows));
   document.getElementById('src').textContent=source;
-  try{const h=new URLSearchParams(location.hash.slice(1));let g=h.get('g'),c=h.get('c');
-    if(!g&&!c){const s=JSON.parse(localStorage.getItem('exam-filter')||'{}');g=s.g;c=s.c;}
-    if(c&&ALLCLS.includes(c)){st.cls=c;st.grade=gradeOf(c);} else if(g&&GRADES.includes(g)) st.grade=g;
-    if(h.get('s')) h.get('s').split(',').filter(s=>ALLSUBJ.includes(s)).slice(0,1).forEach(s=>st.subj.add(s));
+  try{const h=new URLSearchParams(location.hash.slice(1));let gs=h.get('g'),cs=h.get('c'),ss=h.get('s');
+    if(!gs&&!cs&&!ss){const saved=JSON.parse(localStorage.getItem('exam-filter')||'{}');gs=Array.isArray(saved.g)?saved.g.join(','):saved.g;cs=Array.isArray(saved.c)?saved.c.join(','):saved.c;ss=Array.isArray(saved.s)?saved.s.join(','):saved.s;}
+    if(gs) gs.split(',').filter(g=>GRADES.includes(g)).forEach(g=>st.grades.add(g));
+    if(cs) cs.split(',').filter(c=>ALLCLS.includes(c)).forEach(c=>st.classes.add(c));
+    if(ss) ss.split(',').filter(x=>ALLSUBJ.includes(x)).forEach(x=>st.subj.add(x));
     if(h.get('v')==='cal') st.view='cal';
   }catch(e){}
   render();
